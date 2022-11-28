@@ -10,8 +10,9 @@ public class MouseManager : Singleton<MouseManager>
 {
     RaycastHit hitInfo;
 
-    public event Action<Vector3> OnMouseClicked;
-    public event Action<GameObject> OnEnemyClicked;
+    //public event Action<Vector3> OnMouseClicked;
+    public event Action<GameObject> OnMonster1Clicked;
+    public event Action<GameObject> OnMonster2Clicked;
 
     public Texture2D Target, Attack;
 
@@ -43,8 +44,8 @@ public class MouseManager : Singleton<MouseManager>
         if (Input.GetMouseButtonDown(0) && hitInfo.collider != null)
         {
             //if (hitInfo.collider.gameObject.CompareTag("Ground")) OnMouseClicked?.Invoke(hitInfo.point);
-            //if (hitInfo.collider.gameObject.CompareTag("Monsters1")) OnEnemyClicked?.Invoke(hitInfo.collider.gameObject);
-
+            if (hitInfo.collider.gameObject.CompareTag("Monsters1")) OnMonster1Clicked?.Invoke(hitInfo.collider.gameObject);
+            if (hitInfo.collider.gameObject.CompareTag("Monsters2")) OnMonster2Clicked?.Invoke(hitInfo.collider.gameObject);
         }
     }
 }

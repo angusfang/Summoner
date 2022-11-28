@@ -239,7 +239,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &937844929
 GameObject:
@@ -285,8 +285,69 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1030468642
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 100720, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_Name
+      value: DragonNightmare 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 100720, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_TagString
+      value: Monsters2
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.68
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 9.887991
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
 --- !u!1 &1367614645
 GameObject:
   m_ObjectHideFlags: 0
@@ -383,7 +444,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1848961461
 GameObject:
@@ -395,6 +456,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1848961463}
   - component: {fileID: 1848961462}
+  - component: {fileID: 1848961464}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -429,8 +491,20 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1848961464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1848961461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acfebd4bb67786e4197108bc4c816049, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2007937418
 GameObject:
   m_ObjectHideFlags: 0
@@ -563,7 +637,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
       propertyPath: m_LocalPosition.x

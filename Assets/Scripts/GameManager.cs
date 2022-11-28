@@ -25,6 +25,13 @@ public class GameManager : Singleton<GameManager>
     // Update is called once per frame
     void Update()
     {
+        GameObject monster_select1, monster_select2;
+        bool effective_select;
+        (effective_select, monster_select1, monster_select2) = DealSelectState();
+        if (effective_select)
+        {
+            Debug.Log(monster_select1.name + " act to " + monster_select2.name);
+        }
         if (Input.GetKeyDown(KeyCode.L))
         {
             Debug.Log(Player1Monsters.Count);
@@ -33,5 +40,19 @@ public class GameManager : Singleton<GameManager>
                 Debug.Log(monster.name);
             }
         }
+    }
+    private (bool, GameObject, GameObject) DealSelectState()
+    {
+        GameObject monster_select1, monster_select2;
+        bool effective_select;
+        Player1SelectManager.Instance.GetSelectState();
+        (monster_select1, monster_select2) = Player1SelectManager.Instance.GetSelectState();
+        if (monster_select2 != null) {
+            Player1SelectManager.Instance.CleanSelect();
+            effective_select = true;
+            return (effective_select, monster_select1, monster_select2);
+        }
+        effective_select = false;
+        return (effective_select, monster_select1, monster_select2);
     }
 }
