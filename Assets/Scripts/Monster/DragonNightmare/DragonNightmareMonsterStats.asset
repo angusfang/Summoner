@@ -12,8 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 901391dc40a4d4946a55d7cd7b4befb4, type: 3}
   m_Name: DragonNightmareMonsterStats
   m_EditorClassIdentifier: 
-  max_health: 0
-  current_health: 0
-  CD: 0
-  current_CD: 0
-  power: 0
+  max_health: 200
+  current_health: 200
+  CD: 5
+  current_CD: 5
+  cost: 100
+  power: 100
+  animation_duration: 3.5
+  perform_skill_time_point: 1
+  freeze_time: 1.1
+  need_walk: 1
+  is_damage: 1

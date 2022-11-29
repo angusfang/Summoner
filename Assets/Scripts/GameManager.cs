@@ -34,11 +34,7 @@ public class GameManager : Singleton<GameManager>
         {
             
             //Debug.Log(monster_select1.name + " act to " + monster_select2.name);
-            Monster monster1 = monster_select1.GetComponent<Monster>();
-            Monster monster2 = monster_select2.GetComponent<Monster>();
-            NavMeshAgent monster1_agent = monster_select1.GetComponent<NavMeshAgent>();
-            NavMeshAgent monster2_agent = monster_select2.GetComponent<NavMeshAgent>();
-            StartCoroutine( Perform_skill(monster1, monster2, monster1_agent, monster2_agent));
+            StartCoroutine( PerformSkill(monster_select1, monster_select2));
             
             //monster_select1.GetComponent<NavMeshAgent>().destination = monster_select2.transform.position;
             
@@ -67,29 +63,75 @@ public class GameManager : Singleton<GameManager>
         effective_select = false;
         return (effective_select, monster_select1, monster_select2);
     }
-    IEnumerator Perform_skill(Monster monster1, Monster monster2, NavMeshAgent monster1_agent, NavMeshAgent monster2_agent)
+    IEnumerator PerformSkill(GameObject monster_select1, GameObject monster_select2)
     {
+        Monster monster1 = monster_select1.GetComponent<Monster>();
+        Monster monster2 = monster_select2.GetComponent<Monster>();
+        NavMeshAgent monster1_agent = monster_select1.GetComponent<NavMeshAgent>();
+        NavMeshAgent monster2_agent = monster_select2.GetComponent<NavMeshAgent>();
         //TODO: mana check, CD check
-        Quaternion origin_position_rotation = monster1_agent.transform.rotation;
         Vector3 origin_position = monster1.transform.position;
+        Vector3 target_position = monster2.transform.position;
+        Vector3 direction_o2t = (target_position - origin_position).normalized;
+        Vector3 attack_range = (monster1_agent.radius + monster2_agent.radius) * direction_o2t;
+        Animator anim = monster_select1.GetComponent<Animator>();
+        float range_between_pos_tar = monster1_agent.stoppingDistance;
+
+        // Walk front
         if (monster1.monster_stats.need_walk)
         {
-            Vector3 target_position = monster2.transform.position;
-            Vector3 direction_o2t = (target_position - origin_position).normalized;
-            Vector3 attack_range = (monster1_agent.radius + monster2_agent.radius) * direction_o2t;
             monster1_agent.destination = target_position - attack_range;
-            while(Vector3.Distance(monster1_agent.destination, monster1_agent.transform.position) > 0.1 ) yield return null;
+            while (Vector3.Distance(monster1_agent.destination, monster1_agent.transform.position) > range_between_pos_tar) {
+                anim.SetFloat("speed", monster1_agent.velocity.magnitude/monster1_agent.speed);
+                yield return null;
+            }
         }
+
+        // Perform skill
+        anim.SetTrigger("perform_skill");
+        monster1_agent.isStopped = true;
+
+        // Hit target
+        Debug.Log("play skill animation");
         yield return new WaitForSeconds(monster1.monster_stats.perform_skill_time_point);
+        if (monster1.monster_stats.is_damage) StartCoroutine(GetHit(monster_select2));
         monster1.UseSkill(monster2);
+        
         Debug.Log(monster2.monster_stats.current_health);
+        monster1_agent.isStopped = false;
         yield return new WaitForSeconds(Mathf.Max(0, monster1.monster_stats.animation_duration - monster1.monster_stats.perform_skill_time_point));
+
+        // Walk back
         if (monster1.monster_stats.need_walk)
         {
             monster1_agent.destination = monster1_agent.destination + (origin_position- monster1_agent.destination)*1.5f;
-            while (Vector3.Distance(monster1_agent.destination, monster1_agent.transform.position) > 0.1) yield return null;
+            while (Vector3.Distance(monster1_agent.destination, monster1_agent.transform.position) > range_between_pos_tar) {
+                anim.SetFloat("speed", monster1_agent.velocity.magnitude / monster1_agent.speed);
+                yield return null;
+            } 
             monster1_agent.destination = origin_position;
+            while (Vector3.Distance(monster1_agent.destination, monster1_agent.transform.position) > range_between_pos_tar)
+            {
+                anim.SetFloat("speed", monster1_agent.velocity.magnitude / monster1_agent.speed);
+                yield return null;
+            }
+            float remain_speed = monster1_agent.velocity.magnitude;
+            while (remain_speed > 0.0f)
+            {
+                remain_speed = Mathf.Max(0.0f, monster1_agent.velocity.magnitude-0.0f);
+                anim.SetFloat("speed", remain_speed / monster1_agent.speed);
+                //Debug.Log(remain_speed / monster1_agent.speed);
+                yield return null;
+            }
+            //anim.SetFloat("speed", 0.0f);
         }
         
+    }
+    IEnumerator GetHit(GameObject monster_select2)
+    {
+        monster_select2.GetComponent<NavMeshAgent>().isStopped = true;
+        monster_select2.GetComponent<Animator>().SetTrigger("get_hit");
+        yield return new WaitForSeconds(monster_select2.GetComponent < Monster >().monster_stats.freeze_time);
+        monster_select2.GetComponent<NavMeshAgent>().isStopped = false;
     }
 }

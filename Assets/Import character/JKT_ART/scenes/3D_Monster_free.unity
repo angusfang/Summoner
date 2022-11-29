@@ -234,13 +234,78 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 472499574}
   m_LocalRotation: {x: 0.015763381, y: 0.97774845, z: -0.07967583, w: 0.19341978}
-  m_LocalPosition: {x: -4.79, y: 5.25, z: 20.48}
+  m_LocalPosition: {x: -12.16, y: 5.72, z: 23.92}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &522254770
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 100720, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_Name
+      value: DragonNightmare1 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100720, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_TagString
+      value: Monsters2
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -13.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.0000009536743
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 10.173775
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2584199265584839313, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_AutoBraking
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
 --- !u!1 &937844929
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,67 +352,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1030468642
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 100720, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
-      propertyPath: m_Name
-      value: DragonNightmare 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 100720, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
-      propertyPath: m_TagString
-      value: Monsters2
-      objectReference: {fileID: 0}
-    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -6.68
-      objectReference: {fileID: 0}
-    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 9.887991
-      objectReference: {fileID: 0}
-    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
 --- !u!1 &1367614645
 GameObject:
   m_ObjectHideFlags: 0
@@ -629,11 +633,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100720, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
       propertyPath: m_Name
-      value: DragonNightmare
-      objectReference: {fileID: 0}
-    - target: {fileID: 100720, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
-      propertyPath: m_TagString
-      value: Monsters1
+      value: DragonNightmare1
       objectReference: {fileID: 0}
     - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
       propertyPath: m_RootOrder
@@ -641,7 +641,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.401988
+      value: 10.42
       objectReference: {fileID: 0}
     - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -678,6 +678,22 @@ PrefabInstance:
     - target: {fileID: 458774, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2584199265584839313, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_Speed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2584199265584839313, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_AutoBraking
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2584199265584839313, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_Acceleration
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2584199265584839313, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
+      propertyPath: m_StoppingDistance
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
