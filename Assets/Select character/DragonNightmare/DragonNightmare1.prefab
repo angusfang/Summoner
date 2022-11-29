@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 9545436}
   - component: {fileID: 1733556726814592109}
   - component: {fileID: 2584199265584839313}
+  - component: {fileID: 2115926537459329599}
   m_Layer: 0
-  m_Name: DragonNightmare
-  m_TagString: Untagged
+  m_Name: DragonNightmare1
+  m_TagString: Monsters1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -83,7 +84,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -91,6 +92,21 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &2115926537459329599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19c7f58a0e659ea489403cbee295db85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monster_stats_origin: {fileID: 11400000, guid: 5b10d796834005a44b6b54a8e6f8b754, type: 2}
+  need_walk: 1
+  monster_stats: {fileID: 11400000, guid: 5b10d796834005a44b6b54a8e6f8b754, type: 2}
 --- !u!1 &102148
 GameObject:
   m_ObjectHideFlags: 0
