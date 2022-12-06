@@ -7,6 +7,7 @@ TagManager:
   - Ground
   - Monsters1
   - Monsters2
+  - Monster
   layers:
   - Default
   - TransparentFX

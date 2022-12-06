@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Import character/JKT_ART/scenes/3D_Monster_free.unity
+    guid: 866e84f1834cb2542adc2ef668f31bf8
   m_configObjects: {}

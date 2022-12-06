@@ -9,6 +9,7 @@ public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private GameObject MushRoom;
     [SerializeField] private GameObject DragonNightmare;
+    //Dictionary<ulong,>
 
     private List<GameObject> Player1Monsters;
     // Start is called before the first frame update
@@ -17,11 +18,11 @@ public class GameManager : Singleton<GameManager>
         Player1Monsters = new List<GameObject>();
 
         //TODO: monster should be spawn next to the summonor;
-        Vector3 spawnPosition = new Vector3(0f, 0f, 0f);
+        //Vector3 spawnPosition = new Vector3(0f, 0f, 0f);
         //TODO: monster should be Instantiate after player click the monster icon in magic book
-        Player1Monsters.Add((GameObject)Instantiate(MushRoom, spawnPosition, Quaternion.identity));
-        Player1Monsters.Add((GameObject)Instantiate(DragonNightmare, spawnPosition, Quaternion.identity));
-        Player1Monsters.Add((GameObject)Instantiate(DragonNightmare, spawnPosition, Quaternion.identity));
+        //Player1Monsters.Add((GameObject)Instantiate(MushRoom, spawnPosition, Quaternion.identity));
+        //Player1Monsters.Add((GameObject)Instantiate(DragonNightmare, spawnPosition, Quaternion.identity));
+        //Player1Monsters.Add((GameObject)Instantiate(DragonNightmare, spawnPosition, Quaternion.identity));
     }
 
     // Update is called once per frame
