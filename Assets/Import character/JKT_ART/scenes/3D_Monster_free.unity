@@ -500,7 +500,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1848961463}
   - component: {fileID: 1848961462}
-  - component: {fileID: 1848961464}
+  - component: {fileID: 1848961465}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -520,8 +520,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c32c08ea819bd45bcb17d3e4be56ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MushRoom: {fileID: 1382258774799692, guid: 1bb8b2b60c68fb44e899184fb401386c, type: 3}
-  DragonNightmare: {fileID: 100720, guid: 4442019c497d5c94aba1c6415538efc9, type: 3}
 --- !u!4 &1848961463
 Transform:
   m_ObjectHideFlags: 0
@@ -537,7 +535,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1848961464
+--- !u!114 &1848961465
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -546,9 +544,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1848961461}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: acfebd4bb67786e4197108bc4c816049, type: 3}
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2433245239
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &2007937418
 GameObject:
   m_ObjectHideFlags: 0
