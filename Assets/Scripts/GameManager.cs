@@ -91,7 +91,7 @@ public class GameManager : NetworkBehaviour
         Vector3 direction_o2t = (target_position - origin_position).normalized;
         Vector3 attack_range = (monster1_agent.radius + monster2_agent.radius) * direction_o2t;
         Animator anim = monster_select1.GetComponent<Animator>();
-        Quaternion origin_rotation = monster1.transform.rotation;
+        Quaternion origin_rotation = Quaternion.LookRotation(Vector3.zero-origin_position);
         float range_between_pos_tar = monster1_agent.stoppingDistance;
 
         // Walk front
@@ -101,6 +101,8 @@ public class GameManager : NetworkBehaviour
             while (Vector3.Distance(monster1_agent.destination, monster1_agent.transform.position) > range_between_pos_tar) {
                 anim.SetFloat("speed", monster1_agent.velocity.magnitude / monster1_agent.speed);
                 yield return null;
+                target_position = monster2.transform.position;
+                monster1_agent.destination = target_position - attack_range;
             }
         }
 
