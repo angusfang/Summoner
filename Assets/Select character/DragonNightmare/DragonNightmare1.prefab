@@ -91,12 +91,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 100720}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19c7f58a0e659ea489403cbee295db85, type: 3}
+  m_Script: {fileID: 11500000, guid: 9407b4334c07d444f841158d891a3912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   monster_stats_origin: {fileID: 11400000, guid: 5b10d796834005a44b6b54a8e6f8b754, type: 2}
   master_id: 0
-  monster_stats: {fileID: 11400000, guid: 5b10d796834005a44b6b54a8e6f8b754, type: 2}
+  monster_stats: {fileID: 0}
 --- !u!114 &-4897709343413135732
 MonoBehaviour:
   m_ObjectHideFlags: 0

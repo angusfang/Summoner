@@ -20,7 +20,6 @@ public class UIManager : Singleton<UIManager>
         foreach(KeyValuePair<ulong, Canvas> entry in monsterIDToCanvas)
         {
             entry.Value.transform.position = ObjManager.Instance.MonsterNetIDToObj[entry.Key].transform.position + new Vector3(0f, 5f, 0f);
-
         }
     }
     public void AttachCanvasToMonster(ulong NetObjID)
@@ -33,5 +32,9 @@ public class UIManager : Singleton<UIManager>
         textMeshPro.text= monster.monster_stats.current_health.ToString();
         monsterIDToText.Add(NetObjID, textMeshPro);
         
+    }
+    public void SetNewObjHealthValueNearByHeart(ulong NetObjID, int current_health)
+    {
+        monsterIDToText[NetObjID].text= current_health.ToString();
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -17,10 +18,7 @@ public class GameManager : NetworkBehaviour
     private static GameManager instance;
     public static GameManager Instance => instance;
     
-    //[SerializeField] private GameObject MushRoom;
-    //[SerializeField] private GameObject DragonNightmare;
-
-    //Dictionary<ulong,>
+   
     struct PlayerSelectState
     {
         
@@ -29,28 +27,13 @@ public class GameManager : NetworkBehaviour
     };
 
     private PlayerSelectState[] playerSelectStates;
-    //private List<GameObject> Player1Monsters;
-    // Start is called before the first frame update
+    
     public override void OnNetworkSpawn()
     {
-        //if (!IsServer) return;
-        //Player1Monsters = new List<GameObject>();
+        
         if (instance != null) Destroy(gameObject);
         else instance = this;
         playerSelectStates = new PlayerSelectState[maxPlayer];
-        //for (int i = 0; i < 4; i++) {
-        //    playerSelectStates[i].gameObject1 = new GameObject();
-        //    playerSelectStates[i].gameObject2 = new GameObject();
-        //}
-        //Debug.Log("playerSelectStates init");
-        //Debug.Log(playerSelectStates[0]);
-
-        //TODO: monster should be spawn next to the summonor;
-        //Vector3 spawnPosition = new Vector3(0f, 0f, 0f);
-        //TODO: monster should be Instantiate after player click the monster icon in magic book
-        //Player1Monsters.Add((GameObject)Instantiate(MushRoom, spawnPosition, Quaternion.identity));
-        //Player1Monsters.Add((GameObject)Instantiate(DragonNightmare, spawnPosition, Quaternion.identity));
-        //Player1Monsters.Add((GameObject)Instantiate(DragonNightmare, spawnPosition, Quaternion.identity));
     }
 
     // Update is called once per frame
@@ -68,14 +51,6 @@ public class GameManager : NetworkBehaviour
             }
         }
        
-        //if (Input.GetKeyDown(KeyCode.L))
-        //{
-        //    Debug.Log(Player1Monsters.Count);
-        //    foreach (GameObject monster in Player1Monsters)
-        //    {
-        //        Debug.Log(monster.name);
-        //    }
-        //}
     }
 
     IEnumerator PerformSkill(GameObject monster_select1, GameObject monster_select2)
@@ -110,11 +85,17 @@ public class GameManager : NetworkBehaviour
         anim.SetTrigger("perform_skill");
         monster1_agent.isStopped = true;
 
-        // Hit target
+        // Start to hit target
         Debug.Log("play skill animation");
         yield return new WaitForSeconds(monster1.monster_stats.perform_skill_time_point);
+        //Hit target
+            //Animation + Stop agent
         if (monster1.monster_stats.is_damage) StartCoroutine(GetHit(monster_select2));
-        monster1.UseSkill(monster2);
+        //Calculated value
+        CalculateStateAfterSkill(monster1, monster2);
+
+        //TODO: must delete this and dragon class 
+        //monster1.UseSkill(monster2);
 
         Debug.Log(monster2.monster_stats.current_health);
         monster1_agent.isStopped = false;
@@ -142,6 +123,23 @@ public class GameManager : NetworkBehaviour
         }
 
     }
+
+    private void CalculateStateAfterSkill(Monster monster1, Monster monster2)
+    {
+        if(monster1.monster_stats.skillType == MonsterStats_SO.SkillType.MeleeAttack)
+        {
+            monster2.monster_stats.current_health -= monster1.monster_stats.power;
+            //TODO: update for client
+            UpdateMonsterHealthClientRpc(monster2.GetComponent<NetworkObject>().NetworkObjectId, monster2.monster_stats.current_health);
+        }
+        
+    }
+    [ClientRpc]
+    void UpdateMonsterHealthClientRpc(ulong monsterNetID, int current_health)
+    {
+        UIManager.Instance.SetNewObjHealthValueNearByHeart(monsterNetID, current_health);
+    }
+
     IEnumerator GetHit(GameObject monster_select2)
     {
         monster_select2.GetComponent<NavMeshAgent>().isStopped = true;
