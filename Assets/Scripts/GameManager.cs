@@ -1,71 +1,61 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Numerics;
+using System.Threading;
 using Unity.Mathematics;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : NetworkBehaviour
 {
-    [SerializeField] private GameObject MushRoom;
-    [SerializeField] private GameObject DragonNightmare;
-    //Dictionary<ulong,>
-
-    private List<GameObject> Player1Monsters;
-    // Start is called before the first frame update
-    void Start()
+    int maxPlayer = 6;
+    private static GameManager instance;
+    public static GameManager Instance => instance;
+    
+   
+    struct PlayerSelectState
     {
-        Player1Monsters = new List<GameObject>();
+        
+        public GameObject gameObject1;
+        public GameObject gameObject2;
+    };
 
-        //TODO: monster should be spawn next to the summonor;
-        //Vector3 spawnPosition = new Vector3(0f, 0f, 0f);
-        //TODO: monster should be Instantiate after player click the monster icon in magic book
-        //Player1Monsters.Add((GameObject)Instantiate(MushRoom, spawnPosition, Quaternion.identity));
-        //Player1Monsters.Add((GameObject)Instantiate(DragonNightmare, spawnPosition, Quaternion.identity));
-        //Player1Monsters.Add((GameObject)Instantiate(DragonNightmare, spawnPosition, Quaternion.identity));
+    private PlayerSelectState[] playerSelectStates;
+    
+    public override void OnNetworkSpawn()
+    {
+        
+        if (instance != null) Destroy(gameObject);
+        else instance = this;
+        playerSelectStates = new PlayerSelectState[maxPlayer];
     }
 
     // Update is called once per frame
     void Update()
     {
-        GameObject monster_select1, monster_select2;
-        bool effective_select;
-        (effective_select, monster_select1, monster_select2) = DealSelectState();
-        if (effective_select)
+        if (!IsServer) return;
+        //GameObject monster_select1, monster_select2;
+        for(int i=0;i < maxPlayer; i++)
         {
-            
-            //Debug.Log(monster_select1.name + " act to " + monster_select2.name);
-            StartCoroutine( PerformSkill(monster_select1, monster_select2));
-            
-            //monster_select1.GetComponent<NavMeshAgent>().destination = monster_select2.transform.position;
-            
-            
-        }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            Debug.Log(Player1Monsters.Count);
-            foreach (GameObject monster in Player1Monsters)
+            UnityEngine.Random.Range(i, maxPlayer);
+            if (playerSelectStates[i].gameObject2 != null)
             {
-                Debug.Log(monster.name);
+                StartCoroutine(PerformSkill(playerSelectStates[i].gameObject1, playerSelectStates[i].gameObject2));
+                playerSelectStates[i].gameObject1 = playerSelectStates[i].gameObject2 = null;
             }
         }
+       
     }
-    private (bool, GameObject, GameObject) DealSelectState()
-    {
-        GameObject monster_select1, monster_select2;
-        bool effective_select;
-        Player1SelectManager.Instance.GetSelectState();
-        (monster_select1, monster_select2) = Player1SelectManager.Instance.GetSelectState();
-        if (monster_select2 != null) {
-            Player1SelectManager.Instance.CleanSelect();
-            effective_select = true;
-            return (effective_select, monster_select1, monster_select2);
-        }
-        effective_select = false;
-        return (effective_select, monster_select1, monster_select2);
-    }
+
     IEnumerator PerformSkill(GameObject monster_select1, GameObject monster_select2)
     {
+        
         Monster monster1 = monster_select1.GetComponent<Monster>();
         Monster monster2 = monster_select2.GetComponent<Monster>();
         NavMeshAgent monster1_agent = monster_select1.GetComponent<NavMeshAgent>();
@@ -76,6 +66,7 @@ public class GameManager : Singleton<GameManager>
         Vector3 direction_o2t = (target_position - origin_position).normalized;
         Vector3 attack_range = (monster1_agent.radius + monster2_agent.radius) * direction_o2t;
         Animator anim = monster_select1.GetComponent<Animator>();
+        Quaternion origin_rotation = Quaternion.LookRotation(Vector3.zero-origin_position);
         float range_between_pos_tar = monster1_agent.stoppingDistance;
 
         // Walk front
@@ -83,8 +74,10 @@ public class GameManager : Singleton<GameManager>
         {
             monster1_agent.destination = target_position - attack_range;
             while (Vector3.Distance(monster1_agent.destination, monster1_agent.transform.position) > range_between_pos_tar) {
-                anim.SetFloat("speed", monster1_agent.velocity.magnitude/monster1_agent.speed);
+                anim.SetFloat("speed", monster1_agent.velocity.magnitude / monster1_agent.speed);
                 yield return null;
+                target_position = monster2.transform.position;
+                monster1_agent.destination = target_position - attack_range;
             }
         }
 
@@ -92,12 +85,18 @@ public class GameManager : Singleton<GameManager>
         anim.SetTrigger("perform_skill");
         monster1_agent.isStopped = true;
 
-        // Hit target
+        // Start to hit target
         Debug.Log("play skill animation");
         yield return new WaitForSeconds(monster1.monster_stats.perform_skill_time_point);
+        //Hit target
+            //Animation + Stop agent
         if (monster1.monster_stats.is_damage) StartCoroutine(GetHit(monster_select2));
-        monster1.UseSkill(monster2);
-        
+        //Calculated value
+        CalculateStateAfterSkill(monster1, monster2);
+
+        //TODO: must delete this and dragon class 
+        //monster1.UseSkill(monster2);
+
         Debug.Log(monster2.monster_stats.current_health);
         monster1_agent.isStopped = false;
         yield return new WaitForSeconds(Mathf.Max(0, monster1.monster_stats.animation_duration - monster1.monster_stats.perform_skill_time_point));
@@ -105,34 +104,78 @@ public class GameManager : Singleton<GameManager>
         // Walk back
         if (monster1.monster_stats.need_walk)
         {
-            monster1_agent.destination = monster1_agent.destination + (origin_position- monster1_agent.destination)*1.5f;
+            monster1_agent.destination = origin_position;
             while (Vector3.Distance(monster1_agent.destination, monster1_agent.transform.position) > range_between_pos_tar) {
                 anim.SetFloat("speed", monster1_agent.velocity.magnitude / monster1_agent.speed);
                 yield return null;
-            } 
-            monster1_agent.destination = origin_position;
-            while (Vector3.Distance(monster1_agent.destination, monster1_agent.transform.position) > range_between_pos_tar)
-            {
-                anim.SetFloat("speed", monster1_agent.velocity.magnitude / monster1_agent.speed);
-                yield return null;
             }
+
+            StartCoroutine(RototateToOrigin(monster_select1, monster_select1.transform.rotation, origin_rotation, 1f));
             float remain_speed = monster1_agent.velocity.magnitude;
             while (remain_speed > 0.0f)
             {
-                remain_speed = Mathf.Max(0.0f, monster1_agent.velocity.magnitude-0.0f);
+                remain_speed = Mathf.Max(0.0f, remain_speed - 0.1f);
                 anim.SetFloat("speed", remain_speed / monster1_agent.speed);
                 //Debug.Log(remain_speed / monster1_agent.speed);
                 yield return null;
             }
             //anim.SetFloat("speed", 0.0f);
         }
+
+    }
+
+    private void CalculateStateAfterSkill(Monster monster1, Monster monster2)
+    {
+        if(monster1.monster_stats.skillType == MonsterStats_SO.SkillType.MeleeAttack)
+        {
+            monster2.monster_stats.current_health -= monster1.monster_stats.power;
+            //TODO: update for client
+            UpdateMonsterHealthClientRpc(monster2.GetComponent<NetworkObject>().NetworkObjectId, monster2.monster_stats.current_health);
+        }
         
     }
+    [ClientRpc]
+    void UpdateMonsterHealthClientRpc(ulong monsterNetID, int current_health)
+    {
+        UIManager.Instance.SetNewObjHealthValueNearByHeart(monsterNetID, current_health);
+    }
+
     IEnumerator GetHit(GameObject monster_select2)
     {
         monster_select2.GetComponent<NavMeshAgent>().isStopped = true;
         monster_select2.GetComponent<Animator>().SetTrigger("get_hit");
-        yield return new WaitForSeconds(monster_select2.GetComponent < Monster >().monster_stats.freeze_time);
+        yield return new WaitForSeconds(monster_select2.GetComponent<Monster>().monster_stats.freeze_time);
         monster_select2.GetComponent<NavMeshAgent>().isStopped = false;
+    }
+    IEnumerator RototateToOrigin(GameObject monster, Quaternion rotationFrom, Quaternion rotationTo, float rotationTime)
+    {
+        float countTime = 0f;
+        
+        while (countTime<= rotationTime)
+        {
+            Debug.Log(countTime);
+            monster.transform.rotation = Quaternion.Lerp(rotationFrom, rotationTo, countTime / rotationTime);
+            countTime += Time.deltaTime;
+            yield return null;
+        }
+        
+    }
+
+    public void PlayerRayToSelectState(ulong clientID, Ray ray)
+    {
+        //Debug.Log("USE playerSelectStates clientID"+ clientID);
+        //Debug.Log(playerSelectStates[clientID]);
+        RaycastHit hitInfo;
+        if(!Physics.Raycast(ray, out hitInfo)) return;
+        if (hitInfo.collider==null) return;
+        GameObject gameObject = hitInfo.collider.gameObject;
+        if (!gameObject.CompareTag("Monster")) return;
+        if (playerSelectStates[clientID].gameObject1 == null)
+        {
+            if (gameObject.GetComponent<Monster>().master_id != clientID) return;
+            playerSelectStates[clientID].gameObject1 = gameObject;
+        }
+        else playerSelectStates[clientID].gameObject2 = gameObject;
+        
     }
 }

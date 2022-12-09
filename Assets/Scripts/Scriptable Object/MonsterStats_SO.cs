@@ -5,6 +5,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="MonsterStats",menuName ="Monster")]
 public class MonsterStats_SO : ScriptableObject
 {
+    public enum SkillType
+    {
+        MeleeAttack,
+    }
+
+    
     public int max_health;
     public int current_health;
     public int CD;
@@ -16,4 +22,5 @@ public class MonsterStats_SO : ScriptableObject
     public float freeze_time;
     public bool need_walk;
     public bool is_damage;
+    public SkillType skillType;
 }

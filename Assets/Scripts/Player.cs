@@ -3,20 +3,32 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Networking;
 using UnityEngine.UIElements;
 
 public class Player :NetworkBehaviour
 {
     [SerializeField] GameObject MonsterPrefab;
+    
     private Vector3[] SpawnPositions = { new Vector3(10f, 0f, 10f), new Vector3(-10f, 0f, 10f), new Vector3(10f, 0f, -100f), new Vector3(-10f, 0f, -10f) };
     private float createCD = 0f;
     private float createCD_const => 1f;
     public override void OnNetworkSpawn()
     {
         if(!IsOwner) return;
+        Debug.Log("SPAWN");
+
         MoveToSpawnPositionServerRpc(OwnerClientId);
-        //transform.position = SpawnPositions[OwnerClientId];
+        
+        GameObject mainCamera = GameObject.Find("Camera");
+        GameObject cameraPlayer;
+       
+        Debug.Log("Camera" + (OwnerClientId+1));
+
+        cameraPlayer = GameObject.Find("CameraTransform" + (OwnerClientId + 1));
+        mainCamera.transform.SetPositionAndRotation(cameraPlayer.transform.position, cameraPlayer.transform.rotation);
+        
     }
 
     private void Update()
@@ -26,35 +38,36 @@ public class Player :NetworkBehaviour
         if (Input.GetKey(KeyCode.G) && createCD <= 0f)
         {
             createCD = createCD_const;
-            SpawnMonsterServerRpc(OwnerClientId);
+            Vector3 spawnPosition = transform.position + transform.forward * MonsterPrefab.GetComponent<NavMeshAgent>().radius*1.5f;
+            SpawnMonsterServerRpc(OwnerClientId, spawnPosition);
         }
-        if (Input.GetMouseButtonUp(0)) SendRayServerRpc(Camera.main.ScreenPointToRay(Input.mousePosition));
+        if (Input.GetMouseButtonUp(0)) SendRayServerRpc(OwnerClientId, Camera.main.ScreenPointToRay(Input.mousePosition));
         
     }
    
 
     [ServerRpc]
-    void SendRayServerRpc(Ray ray)
+    void SendRayServerRpc(ulong clientID, Ray ray)
     {
-        RaycastHit hitinfo;
-        if (!Physics.Raycast(ray, out hitinfo)) return;
-        if (hitinfo.collider == null) return;
-        GameObject hitGameObject = hitinfo.collider.gameObject;
-        if (!hitGameObject.CompareTag("Monster")) return;
-        Debug.Log(hitGameObject.GetComponent<Monster>().master_id);
+        GameManager.Instance.PlayerRayToSelectState(clientID, ray);
     }
 
     [ServerRpc]
     void MoveToSpawnPositionServerRpc(ulong ClientId)
     {
-        NetworkManager.Singleton.ConnectedClients[ClientId].PlayerObject.transform.position = SpawnPositions[OwnerClientId];
+        Transform PlayerTransform = GameObject.Find("PlayerTransform"+(ClientId+1)).transform;
+        NetworkManager.Singleton.ConnectedClients[ClientId].PlayerObject.transform.SetPositionAndRotation(PlayerTransform.position, PlayerTransform.rotation);
+            
     }
     [ServerRpc]
-    void SpawnMonsterServerRpc(ulong ClientId)
+    void SpawnMonsterServerRpc(ulong ClientId, Vector3 spawnPosition)
     {
         GameObject Monster = Instantiate(MonsterPrefab, new Vector3(ClientId, 0f, ClientId), Quaternion.identity);
         Monster.GetComponent<Monster>().master_id = ClientId;
-        Monster.GetComponent<NetworkObject>().Spawn();
+        NetworkObject networkObject = Monster.GetComponent<NetworkObject>();
+        networkObject.transform.position = spawnPosition;
+        networkObject.transform.LookAt(Vector3.zero);
+        networkObject.Spawn();
     }
 
 
