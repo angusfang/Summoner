@@ -79,6 +79,7 @@ public class GameManager : NetworkBehaviour
                 target_position = monster2.transform.position;
                 monster1_agent.destination = target_position - attack_range;
             }
+            anim.SetFloat("speed", 0f);
         }
 
         // Perform skill
@@ -89,15 +90,15 @@ public class GameManager : NetworkBehaviour
         Debug.Log("play skill animation");
         yield return new WaitForSeconds(monster1.monster_stats.perform_skill_time_point);
         //Hit target
-            //Animation + Stop agent
-        if (monster1.monster_stats.is_damage) StartCoroutine(GetHit(monster_select2));
-        //Calculated value
+        //Animation + Stop agent
+        StartCoroutine(GetHit(monster_select2));
+        ////Calculated value
         CalculateStateAfterSkill(monster1, monster2);
+        ////Judge Death 
+        StartCoroutine(JudgeDie(monster2));
+        
 
-        //TODO: must delete this and dragon class 
-        //monster1.UseSkill(monster2);
-
-        Debug.Log(monster2.monster_stats.current_health);
+        //Debug.Log(monster2.monster_stats.current_health);
         monster1_agent.isStopped = false;
         yield return new WaitForSeconds(Mathf.Max(0, monster1.monster_stats.animation_duration - monster1.monster_stats.perform_skill_time_point));
 
@@ -140,6 +141,16 @@ public class GameManager : NetworkBehaviour
         UIManager.Instance.SetNewObjHealthValueNearByHeart(monsterNetID, current_health);
     }
 
+    IEnumerator JudgeDie(Monster monster)
+    {
+        if (monster.monster_stats.current_health <= 0)
+        {
+            monster.GetComponent<Animator>().SetTrigger("go_die");
+            yield return new WaitForSeconds(3f);
+            monster.GetComponent<NetworkObject>().Despawn();
+
+        }
+    }
     IEnumerator GetHit(GameObject monster_select2)
     {
         monster_select2.GetComponent<NavMeshAgent>().isStopped = true;

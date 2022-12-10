@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -27,14 +28,27 @@ public class UIManager : Singleton<UIManager>
         Canvas monsterCanvas = Instantiate(m_stateBar);
         monsterCanvas.transform.LookAt(monsterCanvas.transform.position + Camera.main.transform.forward);
         monsterIDToCanvas.Add(NetObjID, monsterCanvas);
-        TextMeshPro textMeshPro = monsterCanvas.gameObject.GetComponent<TextMeshPro>();
-        Monster monster = ObjManager.Instance.MonsterNetIDToObj[NetObjID].GetComponent<Monster>();
-        textMeshPro.text= monster.monster_stats.current_health.ToString();
-        monsterIDToText.Add(NetObjID, textMeshPro);
+        //TextMeshPro textMeshPro = monsterCanvas.gameObject.GetComponent<TextMeshPro>();
+        //Monster monster = ObjManager.Instance.MonsterNetIDToObj[NetObjID].GetComponent<Monster>();
+        //textMeshPro.text= monster.monster_stats.current_health.ToString();
+        //monsterIDToText.Add(NetObjID, textMeshPro);
         
     }
     public void SetNewObjHealthValueNearByHeart(ulong NetObjID, int current_health)
     {
         monsterIDToText[NetObjID].text= current_health.ToString();
+    }
+    public void InitHealthValueNearByHeart(ulong NetObjID, int current_health)
+    {
+        TextMeshPro textMeshPro = monsterIDToCanvas[NetObjID].GetComponent<TextMeshPro>();
+        textMeshPro.text = current_health.ToString();
+        monsterIDToText.Add(NetObjID, textMeshPro);
+    }
+    public void DeleteObjInDictionart(ulong NetObjID)
+    {
+        Destroy(monsterIDToCanvas[NetObjID].gameObject);
+        monsterIDToCanvas.Remove(NetObjID);
+        monsterIDToText.Remove(NetObjID);
+        
     }
 }

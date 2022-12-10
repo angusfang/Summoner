@@ -16,8 +16,6 @@ public class Monster : NetworkBehaviour
         //TODO: becaus now player is child class of this class
 
         if (gameObject.tag != "Monster") return;
-        //initial monster state
-        monster_stats = Instantiate(monster_stats_origin);
         ulong NetworkObjectID = GetComponent<NetworkObject>().NetworkObjectId;
         //map netID to object
         ObjManager.Instance.MonsterNetIDToObj.Add(NetworkObjectID, gameObject);
@@ -25,13 +23,31 @@ public class Monster : NetworkBehaviour
         UIManager.Instance.AttachCanvasToMonster(NetworkObjectID);
         //get master_id
         if (!IsServer) return;
+        //initial monster state
+        monster_stats = Instantiate(monster_stats_origin);
         Debug.Log(master_id);
         SetMasterIDClientRpc(NetworkObjectID, master_id);
+        SetMonsterVisualHealthClientRpc(NetworkObjectID, monster_stats.current_health);
     }
-    
+    public override void OnNetworkDespawn()
+    {
+        if (!IsServer) return;
+        ulong NetworkObjectID = GetComponent<NetworkObject>().NetworkObjectId;
+        DeleteCanvasClientRpc(NetworkObjectID);
+    }
 
+    [ClientRpc]
+    void DeleteCanvasClientRpc(ulong NetworkObjectID)
+    {
+        UIManager.Instance.DeleteObjInDictionart(NetworkObjectID);
+    }
 
-    
+    [ClientRpc]
+    void SetMonsterVisualHealthClientRpc(ulong NetworkObjectID, int health)
+    {
+        UIManager.Instance.InitHealthValueNearByHeart(NetworkObjectID, health);
+    }
+
     [ClientRpc]
     void SetMasterIDClientRpc(ulong NetworkObjectID, ulong master_id)
     {

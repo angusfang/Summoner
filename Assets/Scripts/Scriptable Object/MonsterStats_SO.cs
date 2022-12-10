@@ -21,6 +21,5 @@ public class MonsterStats_SO : ScriptableObject
     public float perform_skill_time_point;
     public float freeze_time;
     public bool need_walk;
-    public bool is_damage;
     public SkillType skillType;
 }
