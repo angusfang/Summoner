@@ -22,4 +22,5 @@ public class MonsterStats_SO : ScriptableObject
     public float freeze_time;
     public bool need_walk;
     public SkillType skillType;
+    public ulong requreNumOFSlot;
 }

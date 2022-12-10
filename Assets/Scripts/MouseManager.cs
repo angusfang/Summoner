@@ -11,16 +11,22 @@ public class MouseManager : Singleton<MouseManager>
     RaycastHit hitInfo;
 
     //public event Action<Vector3> OnMouseClicked;
-    public event Action<GameObject> OnMonster1Clicked;
-    public event Action<GameObject> OnMonster2Clicked;
+    //public event Action<GameObject> OnMonster1Clicked;
+    //public event Action<GameObject> OnMonster2Clicked;
 
     public Texture2D Target, Attack;
 
     void Update()
     {
         bool HaveInfo = GetHitInfo();
-        SetCursor(HaveInfo);
-        MouseControl();
+        if (HaveInfo)
+        {
+            SetCursor();
+            ClientSelectManager.Instance.SetHoverObj(hitInfo.collider.gameObject);
+            if(Input.GetMouseButtonUp(0))ClientSelectManager.Instance.SetClickObj();
+        }
+        
+        //MouseControl();
     }
 
     bool GetHitInfo()
@@ -29,23 +35,12 @@ public class MouseManager : Singleton<MouseManager>
         return Physics.Raycast(ray, out hitInfo);
     }
 
-    void SetCursor(bool HaveInfo)
+    void SetCursor()
     {
-        if (HaveInfo)
-        {
             if (hitInfo.collider.gameObject.tag == "Ground") Cursor.SetCursor(Target, new Vector2(16, 16), CursorMode.Auto);
-            if (hitInfo.collider.gameObject.tag == "Monsters1") Cursor.SetCursor(Attack, new Vector2(0, 0), CursorMode.Auto);
-        }
+            if (hitInfo.collider.gameObject.tag == "Monster") Cursor.SetCursor(Attack, new Vector2(0, 0), CursorMode.Auto);
     }
+   
 
-    void MouseControl()
-    {
-
-        if (Input.GetMouseButtonDown(0) && hitInfo.collider != null)
-        {
-            //if (hitInfo.collider.gameObject.CompareTag("Ground")) OnMouseClicked?.Invoke(hitInfo.point);
-            if (hitInfo.collider.gameObject.CompareTag("Monsters1")) OnMonster1Clicked?.Invoke(hitInfo.collider.gameObject);
-            if (hitInfo.collider.gameObject.CompareTag("Monsters2")) OnMonster2Clicked?.Invoke(hitInfo.collider.gameObject);
-        }
-    }
+    
 }

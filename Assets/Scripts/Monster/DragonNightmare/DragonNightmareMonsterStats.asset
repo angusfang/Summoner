@@ -22,4 +22,5 @@ MonoBehaviour:
   perform_skill_time_point: 1
   freeze_time: 1.1
   need_walk: 1
-  is_damage: 1
+  skillType: 0
+  requreNumOFSlot: 3
