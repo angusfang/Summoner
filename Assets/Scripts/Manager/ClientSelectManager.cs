@@ -58,6 +58,7 @@ public class ClientSelectManager : Singleton<ClientSelectManager>
         }
         else if (select1 == null)
         {
+            if (hover.GetComponent<Monster>().master_id != clientID) return;
             select1 = hover;
             select1.gameObject.GetComponent<Outline>().OutlineColor = SelectColor;
         }

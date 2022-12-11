@@ -82,10 +82,11 @@ public class Player :NetworkBehaviour
         monster.monster_stats = Instantiate(MonsterDataManager.Instance.MonsterIDMapToState(monsterID));
         NetworkObject networkObject = MonsterG.GetComponent<NetworkObject>();
         Quaternion rotation = Quaternion.Euler(0f, spawnDegree, 0f);
-        Vector3 myVector = transform.forward*8f;
+        Vector3 myVector = transform.forward*12f;
         Vector3 rotateVector = rotation * myVector;
 
         networkObject.transform.position = transform.position+rotateVector;
+        monster.original_position = networkObject.transform.position;
         networkObject.transform.LookAt(Vector3.zero);
         networkObject.Spawn();
     }

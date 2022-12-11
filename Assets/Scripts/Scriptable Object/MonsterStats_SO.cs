@@ -23,4 +23,5 @@ public class MonsterStats_SO : ScriptableObject
     public bool need_walk;
     public SkillType skillType;
     public ulong requreNumOFSlot;
+    
 }

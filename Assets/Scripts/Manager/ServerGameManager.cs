@@ -62,7 +62,7 @@ public class ServerGameManager : NetworkBehaviour
         NavMeshAgent monster1_agent = monster_select1.GetComponent<NavMeshAgent>();
         NavMeshAgent monster2_agent = monster_select2.GetComponent<NavMeshAgent>();
         //TODO: mana check, CD check
-        Vector3 origin_position = monster1.transform.position;
+        Vector3 origin_position = monster1.original_position;
         Vector3 target_position = monster2.transform.position;
         Vector3 direction_o2t = (target_position - origin_position).normalized;
         Vector3 attack_range = (monster1_agent.radius + monster2_agent.radius) * direction_o2t;
