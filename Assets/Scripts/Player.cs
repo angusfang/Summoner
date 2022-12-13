@@ -9,9 +9,6 @@ using UnityEngine.UIElements;
 
 public class Player :NetworkBehaviour
 {
-    //[SerializeField] GameObject MonsterPrefab;
-    
-    //private Vector3[] SpawnPositions = { new Vector3(10f, 0f, 10f), new Vector3(-10f, 0f, 10f), new Vector3(10f, 0f, -100f), new Vector3(-10f, 0f, -10f) };
     private float createCD = 0f;
     private float createCD_const => 1f;
     public override void OnNetworkSpawn()
@@ -43,9 +40,7 @@ public class Player :NetworkBehaviour
         if (Input.GetKey(KeyCode.G) && createCD <= 0f)
         {
             MonsterDataManager.MonsterID monsterID = MonsterDataManager.MonsterID.NightmareDragon;
-            //MonsterDataManager.Instance.MonsterIDMapToState(monsterID);
             createCD = createCD_const;
-            //Vector3 spawnPosition = transform.position + transform.forward * MonsterPrefab.GetComponent<NavMeshAgent>().radius*1.5f;
             ulong requreNumOFSlot = MonsterDataManager.Instance.MonsterIDMapToState(MonsterDataManager.MonsterID.NightmareDragon).requreNumOFSlot;
             float spawnDegree;
 
@@ -54,16 +49,9 @@ public class Player :NetworkBehaviour
             Debug.Log("spawnDegree"+spawnDegree);
             SpawnMonsterServerRpc(OwnerClientId, spawnDegree, monsterID);
         }
-        //if (Input.GetMouseButtonUp(0)) SendRayServerRpc(OwnerClientId, Camera.main.ScreenPointToRay(Input.mousePosition));
         
     }
    
-
-    //[ServerRpc]
-    //void SendRayServerRpc(ulong clientID, Ray ray)
-    //{
-    //    ServerGameManager.Instance.PlayerRayToSelectState(clientID, ray);
-    //}
 
     [ServerRpc]
     void MoveToSpawnPositionServerRpc(ulong ClientId)
@@ -77,17 +65,18 @@ public class Player :NetworkBehaviour
     {
         GameObject MonsterPrefab = MonsterDataManager.Instance.MonsterIDMapToPrefab(monsterID);
         GameObject MonsterG = Instantiate(MonsterPrefab, new Vector3(ClientId, 0f, ClientId), Quaternion.identity);
-        Monster monster = MonsterG.GetComponent<Monster>();
-        monster.master_id = ClientId;
-        monster.monster_stats = Instantiate(MonsterDataManager.Instance.MonsterIDMapToState(monsterID));
-        NetworkObject networkObject = MonsterG.GetComponent<NetworkObject>();
-        Quaternion rotation = Quaternion.Euler(0f, spawnDegree, 0f);
-        Vector3 myVector = transform.forward*12f;
-        Vector3 rotateVector = rotation * myVector;
 
-        networkObject.transform.position = transform.position+rotateVector;
-        monster.original_position = networkObject.transform.position;
-        networkObject.transform.LookAt(Vector3.zero);
+        Quaternion rotation = Quaternion.Euler(0f, spawnDegree, 0f);
+        Vector3 myVector = transform.forward * 12f;
+        Vector3 rotateVector = rotation * myVector;
+        MonsterG.transform.position = transform.position + rotateVector;
+        if(ClientId==0) MonsterG.transform.LookAt(MonsterG.transform.position + new Vector3 (0,0,-1));
+        else MonsterG.transform.LookAt(MonsterG.transform.position + new Vector3(0, 0, 1));
+
+        Monster monster = MonsterG.GetComponent<Monster>();
+        monster.InitIdPosRot(ClientId, monsterID, MonsterG.transform.position, MonsterG.transform.rotation);
+
+        NetworkObject networkObject = MonsterG.GetComponent<NetworkObject>();
         networkObject.Spawn();
     }
 

@@ -54,6 +54,7 @@ public class ServerGameManager : NetworkBehaviour
        
     }
     
+    //TODO: fix this by FSM now 
     IEnumerator PerformSkill(GameObject monster_select1, GameObject monster_select2)
     {
         
@@ -62,23 +63,25 @@ public class ServerGameManager : NetworkBehaviour
         NavMeshAgent monster1_agent = monster_select1.GetComponent<NavMeshAgent>();
         NavMeshAgent monster2_agent = monster_select2.GetComponent<NavMeshAgent>();
         //TODO: mana check, CD check
-        Vector3 origin_position = monster1.original_position;
+        //Vector3 origin_position = monster1.original_position;
+        Vector3 origin_position = Vector3.zero;
         Vector3 target_position = monster2.transform.position;
         Vector3 direction_o2t = (target_position - origin_position).normalized;
         Vector3 attack_range = (monster1_agent.radius + monster2_agent.radius) * direction_o2t;
         Animator anim = monster_select1.GetComponent<Animator>();
-        Quaternion origin_rotation = Quaternion.LookRotation(Vector3.zero-origin_position);
+        //Quaternion origin_rotation = monster1.original_rotation;
+        Quaternion origin_rotation = Quaternion.Euler(0, 90, 0);
         float range_between_pos_tar = monster1_agent.stoppingDistance;
 
-        if (monster1.monster_stats.current_health <= 0) yield break;
+        if (monster1.MonsterStats.current_health <= 0) yield break;
         // Walk front
-        if (monster1.monster_stats.need_walk)
+        if (monster1.MonsterStats.need_walk)
         {
             monster1_agent.destination = target_position - attack_range;
             while (Vector3.Distance(monster1_agent.destination, monster1_agent.transform.position) > range_between_pos_tar) {
                 anim.SetFloat("speed", monster1_agent.velocity.magnitude / monster1_agent.speed);
                 yield return null;
-                if (monster1.monster_stats.current_health <= 0) yield break;
+                if (monster1.MonsterStats.current_health <= 0) yield break;
                 if (monster2 == null)
                 {
                     monster1_agent.destination = origin_position;
@@ -96,8 +99,8 @@ public class ServerGameManager : NetworkBehaviour
 
         // Start to hit target
         Debug.Log("play skill animation");
-        yield return new WaitForSeconds(monster1.monster_stats.perform_skill_time_point);
-        if (monster1.monster_stats.current_health <= 0) yield break;
+        yield return new WaitForSeconds(monster1.MonsterStats.perform_skill_time_point);
+        if (monster1.MonsterStats.current_health <= 0) yield break;
         //Hit target
         //Animation + Stop agent
         StartCoroutine(GetHit(monster_select2));
@@ -109,17 +112,17 @@ public class ServerGameManager : NetworkBehaviour
 
         //Debug.Log(monster2.monster_stats.current_health);
         monster1_agent.isStopped = false;
-        yield return new WaitForSeconds(Mathf.Max(0, monster1.monster_stats.animation_duration - monster1.monster_stats.perform_skill_time_point));
-        if (monster1.monster_stats.current_health <= 0) yield break;
+        yield return new WaitForSeconds(Mathf.Max(0, monster1.MonsterStats.animation_duration - monster1.MonsterStats.perform_skill_time_point));
+        if (monster1.MonsterStats.current_health <= 0) yield break;
         // Walk back
 
-        if (monster1.monster_stats.need_walk )
+        if (monster1.MonsterStats.need_walk )
         {
             monster1_agent.destination = origin_position;
             while (Vector3.Distance(monster1_agent.destination, monster1_agent.transform.position) > range_between_pos_tar) {
                 anim.SetFloat("speed", monster1_agent.velocity.magnitude / monster1_agent.speed);
                 yield return null;
-                if (monster1.monster_stats.current_health <= 0) yield break;
+                if (monster1.MonsterStats.current_health <= 0) yield break;
             }
 
             StartCoroutine(RototateToOrigin(monster_select1, monster_select1.transform.rotation, origin_rotation, 1f));
@@ -130,7 +133,7 @@ public class ServerGameManager : NetworkBehaviour
                 anim.SetFloat("speed", remain_speed / monster1_agent.speed);
                 //Debug.Log(remain_speed / monster1_agent.speed);
                 yield return null;
-                if (monster1.monster_stats.current_health < 0) yield break;
+                if (monster1.MonsterStats.current_health < 0) yield break;
             }
             //anim.SetFloat("speed", 0.0f);
         }
@@ -139,11 +142,11 @@ public class ServerGameManager : NetworkBehaviour
 
     private void CalculateStateAfterSkill(Monster monster1, Monster monster2)
     {
-        if(monster1.monster_stats.skillType == MonsterStats_SO.SkillType.MeleeAttack)
+        if(monster1.MonsterStats.skillType == MonsterStats_SO.SkillType.MeleeAttack)
         {
-            monster2.monster_stats.current_health -= monster1.monster_stats.power;
+            monster2.MonsterStats.current_health -= monster1.MonsterStats.power;
             //TODO: update for client
-            UpdateMonsterHealthClientRpc(monster2.GetComponent<NetworkObject>().NetworkObjectId, monster2.monster_stats.current_health);
+            UpdateMonsterHealthClientRpc(monster2.GetComponent<NetworkObject>().NetworkObjectId, monster2.MonsterStats.current_health);
         }
         
     }
@@ -155,7 +158,7 @@ public class ServerGameManager : NetworkBehaviour
 
     IEnumerator JudgeDie(Monster monster)
     {
-        if (monster.monster_stats.current_health <= 0)
+        if (monster.MonsterStats.current_health <= 0)
         {
             monster.GetComponent<Animator>().SetTrigger("go_die");
             monster.GetComponent<NavMeshAgent>().enabled = false;
@@ -170,7 +173,7 @@ public class ServerGameManager : NetworkBehaviour
         NavMeshAgent agent = monster_select2.GetComponent<NavMeshAgent>();
         agent.isStopped = true;
         monster_select2.GetComponent<Animator>().SetTrigger("get_hit");
-        yield return new WaitForSeconds(monster_select2.GetComponent<Monster>().monster_stats.freeze_time);
+        yield return new WaitForSeconds(monster_select2.GetComponent<Monster>().MonsterStats.freeze_time);
         if (agent.enabled==false) yield break;
         agent.isStopped = false;
     }
@@ -189,23 +192,23 @@ public class ServerGameManager : NetworkBehaviour
         
     }
 
-    public void PlayerRayToSelectState(ulong clientID, Ray ray)
-    {
-        //Debug.Log("USE playerSelectStates clientID"+ clientID);
-        //Debug.Log(playerSelectStates[clientID]);
-        RaycastHit hitInfo;
-        if(!Physics.Raycast(ray, out hitInfo)) return;
-        if (hitInfo.collider==null) return;
-        GameObject gameObject = hitInfo.collider.gameObject;
-        if (!gameObject.CompareTag("Monster")) return;
-        if (playerSelectStates[clientID].gameObject1 == null)
-        {
-            if (gameObject.GetComponent<Monster>().master_id != clientID) return;
-            playerSelectStates[clientID].gameObject1 = gameObject;
-        }
-        else playerSelectStates[clientID].gameObject2 = gameObject;
+    //public void PlayerRayToSelectState(ulong clientID, Ray ray)
+    //{
+    //    //Debug.Log("USE playerSelectStates clientID"+ clientID);
+    //    //Debug.Log(playerSelectStates[clientID]);
+    //    RaycastHit hitInfo;
+    //    if(!Physics.Raycast(ray, out hitInfo)) return;
+    //    if (hitInfo.collider==null) return;
+    //    GameObject gameObject = hitInfo.collider.gameObject;
+    //    if (!gameObject.CompareTag("Monster")) return;
+    //    if (playerSelectStates[clientID].gameObject1 == null)
+    //    {
+    //        if (gameObject.GetComponent<Monster>().master_id != clientID) return;
+    //        playerSelectStates[clientID].gameObject1 = gameObject;
+    //    }
+    //    else playerSelectStates[clientID].gameObject2 = gameObject;
         
-    }
+    //}
     public void SetSelectState(ulong UserID, ulong monsterID1, ulong monsterID2)
     {
         playerSelectStates[UserID].gameObject1 = ObjManager.Instance.MonsterNetIDToObj[monsterID1];
