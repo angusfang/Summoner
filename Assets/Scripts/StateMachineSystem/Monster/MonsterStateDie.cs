@@ -1,18 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class MonsterStateDie : MonoBehaviour
+[CreateAssetMenu(menuName = "StateMachine/MonsterState/Die", fileName = "MonsterStateDie")]
+public class MonsterStateDie : MonsterState
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] float DieTime;
+    float DieCountDown;
+    public override void Enter()
     {
-        
+        animator.SetBool("Die", true);
+        collider.enabled = false;
+        agentObstacle.enabled = false;
+        collider.enabled = true;
+        DieCountDown = DieTime;
     }
-
-    // Update is called once per frame
-    void Update()
+    public override void LogicUpdate()
     {
-        
+        base.LogicUpdate();
+        DieCountDown -= Time.deltaTime;
+        if (DieCountDown <= 0)
+        {
+            monster.GetComponent<NetworkObject>().Despawn();
+        }
+    }
+    public override void Exit()
+    {
+        animator.SetBool("Die", false);
     }
 }

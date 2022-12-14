@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 6997522436629090277}
   - component: {fileID: -6788119757270310815}
   - component: {fileID: -4868548341224116082}
+  - component: {fileID: -6878837269672830869}
   m_Layer: 0
   m_Name: DragonNightmare1
   m_TagString: Monster
@@ -97,9 +98,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9407b4334c07d444f841158d891a3912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  master_id: 0
-  original_position: {x: 0, y: 0, z: 0}
-  monster_stats: {fileID: 0}
 --- !u!114 &-4897709343413135732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,6 +214,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CanvasPrefab: {fileID: 1987860045153630753, guid: f6189a9d59afc084fbf5754cddaf6fe6, type: 3}
+  MonsterID: 0
+--- !u!114 &-6878837269672830869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2aed9fab6e18b04aac80eb37ad7a6ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  states:
+  - {fileID: 11400000, guid: 720b5b67973b673418c728453efc4e8d, type: 2}
+  - {fileID: 11400000, guid: 78cfcfa84a21b3241a2793414a89a18f, type: 2}
+  - {fileID: 11400000, guid: 9ccf6e4cfca4f814c8c62b1bed5db939, type: 2}
+  - {fileID: 11400000, guid: d68182e3cde74ec41a6f8dcf0a9e3793, type: 2}
+  - {fileID: 11400000, guid: f522cffed6c42884daa68ad8ea922b2b, type: 2}
 --- !u!1 &102148
 GameObject:
   m_ObjectHideFlags: 0
