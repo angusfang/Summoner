@@ -15,12 +15,14 @@ public class MonsterStateHurt : MonsterState {
         animator.SetBool("Hurt", true);
         freezeCountDown = freezeTime;
         monster.MonsterStats.current_health -= stateMachine.ReceiveDamage;
-        if(monster.MonsterStats.current_health<=0) stateMachine.SwitchState(typeof(MonsterStateDie));
+        monster.SetVisualHealthClientRpc(monster.MonsterStats.current_health);
         stateMachine.HurtSignal = false;
     }
     public override void LogicUpdate()
     {
+        
         base.LogicUpdate();
+        if (monster.MonsterStats.current_health <= 0) stateMachine.SwitchState(typeof(MonsterStateDie));
         if (stateMachine.HurtSignal) {
             animator.SetTrigger("HurtTri");
             stateMachine.SwitchState(typeof(MonsterStateHurt));

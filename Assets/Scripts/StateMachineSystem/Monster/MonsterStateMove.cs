@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [CreateAssetMenu(menuName = "StateMachine/MonsterState/Move", fileName = "MonsterStateMove")]
 public class MonsterStateMove : MonsterState
@@ -11,8 +12,9 @@ public class MonsterStateMove : MonsterState
     public override void Enter()
     {
         animator.SetBool("Move", true);
-        agent.enabled = true;
         agentObstacle.enabled = false;
+        agent.enabled = true;
+        
         collider.enabled = true;
 
         stateMachine.CollideSignal = false;
@@ -28,8 +30,11 @@ public class MonsterStateMove : MonsterState
         if (stateMachine.CollideSignal)
         {
             stateMachine.CollideSignal = false;
-            detour = true;
-            tempDestination = gameObject.transform.right*agent.radius + gameObject.transform.position;
+            //detour = true;
+            //Vector3 radomPoint;
+            //if (RandomPoint(agent.transform.position, agent.radius, out radomPoint)) tempDestination = radomPoint;
+            //else tempDestination = agent.transform.position+agent.transform.right * -1f;
+            //tempDestination = agent.transform.position + agent.transform.right * -1f;
         }
         if (detour)
         {
@@ -61,4 +66,18 @@ public class MonsterStateMove : MonsterState
         animator.SetBool("Move", false);
     }
 
+    bool RandomPoint(Vector3 center, float range, out Vector3 result)
+    {
+       
+        Vector3 randomPoint = center + agent.transform.right * range;
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(randomPoint, out hit, range, NavMesh.AllAreas))
+        {
+            result = hit.position;
+            return true;
+        }
+        
+        result = Vector3.zero;
+        return false;
+    }
 }

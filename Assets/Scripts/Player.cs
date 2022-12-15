@@ -14,14 +14,12 @@ public class Player :NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         if(!IsOwner) return;
-        Debug.Log("SPAWN");
         
         MoveToSpawnPositionServerRpc(OwnerClientId);
         
         GameObject mainCamera = GameObject.Find("Camera");
         GameObject cameraPlayer;
        
-        Debug.Log("Camera" + (OwnerClientId+1));
 
         cameraPlayer = GameObject.Find("CameraTransform" + (OwnerClientId + 1));
         mainCamera.transform.SetPositionAndRotation(cameraPlayer.transform.position, cameraPlayer.transform.rotation);
@@ -46,7 +44,6 @@ public class Player :NetworkBehaviour
 
             //find monster position
             if(!ClientMonsterPositionManager.Instance.RequirePosition(requreNumOFSlot,out spawnDegree))return;
-            Debug.Log("spawnDegree"+spawnDegree);
             SpawnMonsterServerRpc(OwnerClientId, spawnDegree, monsterID);
         }
         

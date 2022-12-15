@@ -13,7 +13,7 @@ public class MonsterStateDie : MonsterState
         animator.SetBool("Die", true);
         collider.enabled = false;
         agentObstacle.enabled = false;
-        collider.enabled = true;
+        collider.enabled = false;
         DieCountDown = DieTime;
     }
     public override void LogicUpdate()

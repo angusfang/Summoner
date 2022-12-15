@@ -31,4 +31,8 @@ public class MonsterCanvas : MonoBehaviour
     {
         m_health.text = currentHealth.ToString();
     }
+    public void DestroyCanvas()
+    {
+        Destroy(m_CanvasPrefab);
+    }
 }

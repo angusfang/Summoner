@@ -29,7 +29,11 @@ public class MonsterState : ScriptableObject, IState
 
     public virtual void LogicUpdate()
     {
-        if (TargerIsDie()) stateMachine.AttackSignal = false;
+        if (TargerIsDie()) {
+            stateMachine.AttackSignal = false;
+            
+        }
+        
     }
     public void Initialize(Animator animator, NavMeshAgent agent, NavMeshObstacle agentObstacle, Collider collider, MonsterStateMachine stateMachine, GameObject gameObject,
         Monster monster)
@@ -45,7 +49,8 @@ public class MonsterState : ScriptableObject, IState
 
     protected bool TargerIsDie()
     {
-        if (stateMachine.TargetMonster.gameObject == null || stateMachine.TargetMonster.stateMachine.IsDie) return true;
+        if (stateMachine.TargetMonster.gameObject == null) return true;
+        if (stateMachine.TargetMonster.stateMachine.IsDie) return true;
         return false;
     }
 

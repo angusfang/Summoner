@@ -20,9 +20,10 @@ public class MonsterStateAttack : MonsterState
     }
     public override void LogicUpdate()
     {
+        attackCountDown -= Time.deltaTime;
         base.LogicUpdate();
         if (stateMachine.HurtSignal) stateMachine.SwitchState(typeof(MonsterStateHurt));
-        if (attackCountDown > AttackPrepareTime) return;
+        if (attackCountDown>AttackDuration - AttackPrepareTime) return;
         if (!alreadyAttack && stateMachine.AttackSignal)
         {
             stateMachine.TargetMonster.stateMachine.HurtSignal = true;

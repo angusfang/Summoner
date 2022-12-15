@@ -54,17 +54,20 @@ public class MonsterStateMachine : StateMachine
         stateTable = new Dictionary<Type, IState>(states.Length);
         foreach (MonsterState state in states)
         {
-            state.Initialize(GetComponent<Animator>(), GetComponent<NavMeshAgent>(), GetComponent<NavMeshObstacle>(), GetComponent<Collider>(),
+            MonsterState copyIstate = Instantiate(state);
+            copyIstate.Initialize(GetComponent<Animator>(), GetComponent<NavMeshAgent>(), GetComponent<NavMeshObstacle>(), GetComponent<Collider>(),
                 GetComponent<MonsterStateMachine>(), gameObject, GetComponent<Monster>());
-            stateTable.Add(state.GetType(), state);
+            stateTable.Add(copyIstate.GetType(), copyIstate);
         }
         m_attackSignal = false;
         m_hurtSignal = false;
         m_timeUpSignal = false;
         m_goBackSignal = false;
         m_collideSignal = false;
+        m_isDie = false;
         m_receiveDamage = 0;
-        m_targetMonster = new Str_targetMonster() { gameObject = null, agent = null, monster = null };
+        
+        m_targetMonster = new Str_targetMonster() { gameObject = null, agent = null, monster = null , stateMachine =null};
     }
 
     // Start is called before the first frame update
@@ -74,9 +77,10 @@ public class MonsterStateMachine : StateMachine
     }
 
     // Update is called once per frame
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collider)
     {
         CollideSignal = true;
+        Debug.Log("Collision");
     }
 
     

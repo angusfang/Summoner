@@ -48,6 +48,7 @@ public class Monster : NetworkBehaviour
 
         //TODO: becaus now player is child class of this class
         if (gameObject.tag != "Monster") return;
+        
         m_MonsterCanvas = gameObject.GetComponent<MonsterCanvas>();
         ulong NetworkObjectID = GetComponent<NetworkObject>().NetworkObjectId;
         
@@ -70,10 +71,11 @@ public class Monster : NetworkBehaviour
         ulong NetworkObjectID = GetComponent<NetworkObject>().NetworkObjectId;
         ObjManager.Instance.MonsterNetIDToObj.Remove(NetworkObjectID);
         ClientMonsterPositionManager.Instance.RealsePosition(NetworkObjectID);
+        m_MonsterCanvas.DestroyCanvas();
     }
 
     [ClientRpc]
-    void SetVisualHealthClientRpc(int current_health)
+    public void SetVisualHealthClientRpc(int current_health)
     {
         m_MonsterCanvas.SetHealthBar(current_health);
     }

@@ -18,7 +18,7 @@ public class MonsterStateIdle :MonsterState
         if (stateMachine.HurtSignal) stateMachine.SwitchState(typeof(MonsterStateHurt));
         else if (stateMachine.AttackSignal)
         {
-            if(Vector3.Distance(stateMachine.TargetMonster.agent.transform.position, agent.transform.position)
+            if (Vector3.Distance(stateMachine.TargetMonster.agent.transform.position, agent.transform.position)
                 - stateMachine.TargetMonster.agent.radius - agent.radius <= monster.MonsterStats.attack_range) stateMachine.SwitchState(typeof(MonsterStateAttack));
             else
             {
